@@ -24,3 +24,13 @@ model:
   timeemb: 128
   featureemb: 16
   target_strategy: "random"
+  test_missing_ratio: 1
+
+more:
+  S0: 100
+  timestep: 300
+  stimcount: 200007
+  idea: 2
+  line : "y"
+  drift: 0.1
+  sigma: 0.5
