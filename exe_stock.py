@@ -50,8 +50,9 @@ if (config["more"]["line"]=="y"):
 
 print(missratio, timelength, stimcount, drift, sigma, idea)
 
-foldername = "./save/stk" + "__i" + str(idea) + "_m" + str(missratio) + "_ls" + str(drift) + "_tc" + str(stimcount) + "/"
-print('model folder:', foldername)
+current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+foldername = "./save/stk" + "_" + current_time + "/"
+#you may prefer better changing the profile name
 
 traindata, train_loader, valid_loader, test_loader = get_dataloader(
     seed=args.seed,
@@ -63,7 +64,7 @@ traindata, train_loader, valid_loader, test_loader = get_dataloader(
     drift=drift,
     sigma=sigma,
     idea=idea,
-    line=False
+    line=line
 )
 
 os.makedirs(foldername, exist_ok=True)
@@ -83,10 +84,12 @@ if args.modelfolder == "":
 else:
     model.load_state_dict(torch.load("./save/" + args.modelfolder + "/model.pth"))
 
+outputbatchcount=2
+
 traindata=traindata.squeeze()
 torch.save(traindata, foldername+'traindata.pt')
 nsample=args.nsample
-with torch.no_grad():
+with torch.no_grad(): #this part is copied from the "evaluate" function in utils.py
     model.eval()
     mse_total = 0
     mae_total = 0
@@ -108,7 +111,7 @@ with torch.no_grad():
             eval_points = eval_points.squeeze()
             observed_points = observed_points.permute(0, 2, 1)
             samples_median, samples_median_i = samples.median(dim=1)
-            if (batch_no<=2):
+            if (batch_no<=outputbatchcount):
                 torch.save(samples, foldername+'samples'+str(batch_no)+'.pt')
                 torch.save(c_target, foldername+'c_target'+str(batch_no)+'.pt')
             else:

@@ -49,10 +49,8 @@ class Stock_Dataset(Dataset):
         self.observed_values = torch.tensor(self.data.T).unsqueeze(2)
         self.observed_masks = torch.ones_like(self.observed_values)
         self.gt_masks = self.observed_masks.clone()
-        #self.gt_masks[:, 60:240] = 0 #-1*math.floor(eval_length*missing_ratio)
 
-        # randomly set some percentage as ground-truth
-        if ransample:
+        if ransample: # randomly set some percentage as ground-truth
             self.masks = self.observed_masks.reshape(-1).clone()
             self.obs_indices = np.where(self.masks)[0].tolist()
             self.miss_indices = np.random.choice(
@@ -61,16 +59,16 @@ class Stock_Dataset(Dataset):
             self.masks[self.miss_indices] = False
             self.gt_masks = self.masks.reshape(self.observed_masks.shape)
         else:
-            self.gt_masks[:, -1*math.floor(eval_length*missing_ratio):] = 0 #-1*math.floor(eval_length*missing_ratio)
+            self.gt_masks[:, -1*math.floor(eval_length*missing_ratio):] = 0 #set the last missing_ratio% of the data to 0
 
         if emptytest:
             self.gt_masks = torch.zeros_like(self.observed_values)
 
-        print(self.observed_values.size()) #(1000, 300, 1)
-        print(self.observed_masks.size()) #(1000, 300, 1) #all ones
-        print(self.gt_masks.size()) #(1000, 300, 1) (1000, 300, 1) first 240 ones, then 60 zeros
-        print(self.observed_masks[0].squeeze())
-        print(ransample, self.gt_masks[0].squeeze())
+        #print(self.observed_values.size()) #(1000, 300, 1)
+        #print(self.observed_masks.size()) #(1000, 300, 1) #all ones
+        #print(self.gt_masks.size()) #(1000, 300, 1) (1000, 300, 1) first 240 ones, then 60 zeros
+        #print(self.observed_masks[0].squeeze())
+        #print(ransample, self.gt_masks[0].squeeze())
 
         if use_index_list is None:
             self.use_index_list = np.arange(len(self.observed_values))
@@ -138,6 +136,3 @@ def get_dataloader(seed=1, nfold=0, batch_size=16, missing_ratio=0.2, timelength
     )
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=0)
     return dataset.getdata(), train_loader, valid_loader, test_loader
-
-get_dataloader()
-#dataset = Stock_Dataset(missing_ratio=0.2, seed=0, eval_length=300, stimcount=1000)

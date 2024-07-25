@@ -29,7 +29,7 @@ model:
 more:
   S0: 100
   timestep: 300
-  stimcount: 200007
+  stimcount: 200000
   idea: 2
   line : "y"
   drift: 0.1
