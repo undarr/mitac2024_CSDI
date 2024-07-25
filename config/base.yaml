@@ -31,6 +31,6 @@ more:
   timestep: 300
   stimcount: 200000
   idea: 2
-  line : "y"
+  log : "y"
   drift: 0.1
   sigma: 0.5

@@ -44,9 +44,9 @@ stimcount = config["more"]["stimcount"]
 drift = config["more"]["drift"]
 sigma = config["more"]["sigma"]
 idea = config["more"]["idea"]
-line = False
-if (config["more"]["line"]=="y"):
-    line=True
+log = False
+if (config["more"]["log"]=="y"):
+    log=True
 
 print(missratio, timelength, stimcount, drift, sigma, idea)
 
@@ -64,7 +64,7 @@ traindata, train_loader, valid_loader, test_loader = get_dataloader(
     drift=drift,
     sigma=sigma,
     idea=idea,
-    line=line
+    log=logs
 )
 
 os.makedirs(foldername, exist_ok=True)

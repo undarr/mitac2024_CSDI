@@ -38,11 +38,11 @@ def lgbm(mu=0.1, n=300, T=1, M=20000, S0=100, sigma=0.3, seed=0):
 
 
 class Stock_Dataset(Dataset):
-    def __init__(self, eval_length=300, use_index_list=None, missing_ratio=0.1, seed=0, stimcount=20000, ransample=False, emptytest=False, drift=0.1, sigma=0.3, line=True):
+    def __init__(self, eval_length=300, use_index_list=None, missing_ratio=0.1, seed=0, stimcount=20000, ransample=False, emptytest=False, drift=0.1, sigma=0.3, log=True):
 
         self.data=gbm(mu=drift, n=eval_length, T=1, M=stimcount, S0=100, sigma=sigma, seed=seed)
-        if (line):
-            self.data=linegen(slope=drift, intecept=100, off=0.1, seed=0, M=stimcount)
+        if (log):
+            #self.data=linegen(slope=drift, intecept=100, off=0.1, seed=0, M=stimcount)
             self.data=lgbm(mu=drift, n=eval_length, T=1, M=stimcount, S0=100, sigma=sigma, seed=seed)
         self.eval_length = eval_length
 
@@ -94,7 +94,7 @@ class Stock_Dataset(Dataset):
         return len(self.use_index_list)
 
 
-def get_dataloader(seed=1, nfold=0, batch_size=16, missing_ratio=0.2, timelength=300, stimcount=20000, idea=1, drift=0.1, sigma=0.3, line=False):
+def get_dataloader(seed=1, nfold=0, batch_size=16, missing_ratio=0.2, timelength=300, stimcount=20000, idea=1, drift=0.1, sigma=0.3, log=False):
     print(missing_ratio,timelength,stimcount,drift,sigma,idea)
 
     # only to obtain total length of dataset
@@ -124,15 +124,15 @@ def get_dataloader(seed=1, nfold=0, batch_size=16, missing_ratio=0.2, timelength
         emptytest=True
 
     dataset = Stock_Dataset(
-        use_index_list=train_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, drift=drift, sigma=sigma, line=line
+        use_index_list=train_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, drift=drift, sigma=sigma, log=log
     )
     train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=1)
     valid_dataset = Stock_Dataset(
-        use_index_list=valid_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, drift=drift, sigma=sigma, line=line
+        use_index_list=valid_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, drift=drift, sigma=sigma, log=log
     )
     valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=0)
     test_dataset = Stock_Dataset(
-        use_index_list=test_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, emptytest=emptytest, drift=drift, sigma=sigma, line=line
+        use_index_list=test_index, missing_ratio=missing_ratio, seed=seed, eval_length=timelength, stimcount=stimcount, ransample=ransample, emptytest=emptytest, drift=drift, sigma=sigma, log=log
     )
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=0)
     return dataset.getdata(), train_loader, valid_loader, test_loader
