@@ -1,8 +1,18 @@
 # CSDI
-This is the github repository for the NeurIPS 2021 paper "[CSDI: Conditional Score-based Diffusion Models for Probabilistic Time Series Imputation](https://arxiv.org/abs/2107.03502)".
+This is the github repository for my 2024 MITAC Globalink research internship. More details can be found in my MITAC report [here](https://drive.google.com/file/d/1SOaU6ulxb3qH_NOvzx07tPIvh1_ddhzu/view?usp=sharing). This github repository is amended from the github repository originally for the NeurIPS 2021 paper "[CSDI: Conditional Score-based Diffusion Models for Probabilistic Time Series Imputation](https://arxiv.org/abs/2107.03502)".
+
+### Using the code
+To use the code, amend the parameters in the base.yaml file in the config folder. Then run the code 
+```shell
+python exe_stock.py --nsample [number of samples]
+```
+to generate/impute GBM / logGBM paths. Make sure you have a NVIDIA device, which could be accessed by running
+```shell
+sbatch batch.sh
+```
+with a watgpu account in UWaterloo. 
 
 ## Requirement
-
 Please install the packages in requirements.txt
 
 ## Preparation
